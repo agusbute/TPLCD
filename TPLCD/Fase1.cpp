@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Fase1.h"
-#include "ftd2xx.h"
+
 #define MY_LCD_DESCRIPTION "EDA LCD 2 B"
 using namespace std;
 
@@ -8,7 +8,7 @@ Fase1::
 Fase1()
 {
 	disp_status = FT_OK;
-	if ((disp_status = FT_Open(1, &disp_handler)) == FT_OK)
+	if ((disp_status = FT_OpenEx(1, &disp_handler)) == FT_OK)
 	{
 		if (FT_SetBitMode(disp_handler, 0xFF, 1) != FT_OK)		//0xFF es la mascara, 1 es el modo
 		{			
@@ -44,9 +44,11 @@ lcdWriteDR(unsigned char byte)
 {
 	unsigned char temp = byte & 0xF0;
 	temp = temp | 0x20;
+	lcdwriteNibble(&disp_handler, temp);
+	temp = ((byte & 0x0F) << 4) & 0xF0;
+	temp = temp | 0x02;
 	lcdWriteNibble(&disp_handler, temp);
-	temp = ((byte & 0x0F) <);
-
+	return;
 };
 
 bool Fase1::
