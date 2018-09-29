@@ -47,8 +47,8 @@ public:
 	bool lcdInit();
 	bool lcdWriteIR(unsigned char byte); 
 	bool lcdWriteDR(unsigned char byte);
-	bool lcdWriteByte(unsigned char, unsigned char);
-	bool lcdWriteNibble(unsigned char byte);
+	//bool lcdWriteByte(unsigned char, unsigned char);
+	bool lcdWriteNibble(FT_HANDLE * disp, unsigned char nibble);
 
 protected:
 	FT_STATUS disp_status; 

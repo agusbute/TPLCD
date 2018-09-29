@@ -45,8 +45,10 @@ lcdWriteDR(unsigned char byte)
 	unsigned char temp = byte & 0xF0;
 	temp = temp | 0x20;
 	lcdwriteNibble(&disp_handler, temp);
-	temp = ((byte & 0x0F) <);
-
+	temp = ((byte & 0x0F) << 4) & 0xF0;
+	temp = temp | 0x02;
+	lcdWriteNibble(&disp_handler, temp);
+	return;
 };
 
 bool Fase1::
