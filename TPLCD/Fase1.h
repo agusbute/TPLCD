@@ -45,17 +45,14 @@ public:
 	Fase1();
 	~Fase1();
 	bool lcdInit();
-	bool lcdWriteIR(unsigned char byte); 
-	bool lcdWriteDR(unsigned char byte);
-	//bool lcdWriteByte(unsigned char, unsigned char);
-	bool lcdWriteNibble(FT_HANDLE * disp, unsigned char nibble);
-
-protected:
-	FT_STATUS disp_status; 
-
+	bool lcdWriteIR(BYTE byte); 
+	bool lcdWriteDR(BYTE byte);
+	bool lcdWriteByte(FT_HANDLE * deviceHandler, BYTE value, BYTE rs);
+	bool lcdWriteNibble(FT_HANDLE * disp, BYTE nibble);
+	
 private:
 	FT_HANDLE disp_handler;
-	Fase1(Fase1 &disp); 
-	Fase1& operator= (const Fase1& disp); 
+	LPDWORD bytesSent;
+	FT_STATUS disp_status;
 };
 
