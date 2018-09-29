@@ -21,9 +21,6 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Google Chrome Downloads\FTDI Programming\EDA Ejemplo FTDI\pruebasConFTDI\ftd2xx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Fase1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
