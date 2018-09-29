@@ -34,8 +34,11 @@
 #define FONT_5X8					(0<<FONT_BIT) //USED IN FUNCTION SET
 #define FONT_5X10					(1<<FONT_BIT) //USED IN FUNCTION SET
 
-#define DISPLAY_ON_OFF_CONTROL		0x0F
+#define DISPLAY_ON_OFF_CONTROL		0x0F	
 #define SET_ADDRESS(a,b)			(0x80 + (a) + (b) * 0x40)
+
+
+#define MY_LCD_DESCRIPTION "EDA LCD 2 B"
 
 using namespace std;
 
@@ -46,13 +49,13 @@ public:
 	~Fase1();
 	bool lcdInit();
 	bool lcdWriteIR(BYTE byte); 
+	void changeFourBitMode();
 	bool lcdWriteDR(BYTE byte);
-	bool lcdWriteByte(FT_HANDLE * deviceHandler, BYTE value, BYTE rs);
-	bool lcdWriteNibble(FT_HANDLE * disp, BYTE nibble);
+	bool lcdWriteByte(BYTE value, BYTE rs);
+	bool lcdWriteNibble(BYTE nibble);
 	
 private:
 	FT_HANDLE disp_handler;
 	LPDWORD bytesSent;
 	FT_STATUS disp_status;
 };
-
