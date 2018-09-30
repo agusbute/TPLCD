@@ -1,13 +1,14 @@
 #pragma once
-
 #include "stdafx.h"
+#include "Fase1.h"
 
 struct cursorPosition
 {
 	int row;
 	int column;
 };
-class basicLCD
+
+class BasicLCD
 {
 public:
 	/*=====================================================
@@ -18,7 +19,7 @@ public:
 	*
 	* cadd =1 (cursor address) (ver NOTA 1)
 	*=====================================================*/
-	basicLCD();
+	BasicLCD();
 	/*=====================================================
 	* Name: ~basicLCD
 	* Entra: -
@@ -26,7 +27,7 @@ public:
 	* que se hubiera tomado de forma de evitar
 	* "resources leak".
 	*=====================================================*/
-	~basicLCD();
+	~BasicLCD();
 	/*=====================================================
 	* Name: lcdInitOk
 	* Entra: -
@@ -78,7 +79,7 @@ public:
 	* basicLCD lcd;
 	* lcd << ‘a’ << ‘b’ << ‘c’;
 	*=====================================================*/
-	virtual basicLCD& operator<<(const unsigned char c) = 0;
+	virtual BasicLCD& operator<<(const unsigned char c) = 0;
 	/*=====================================================
 	* Name: operator<<()
 	* Entra: Una cadena de caracteres NULL terminated
@@ -92,7 +93,7 @@ public:
 	* basicLCD lcd;
 	* lcd << “Hola” << “ “ << “Mundo”;
 	*=====================================================*/
-	virtual basicLCD& operator<<(const unsigned char * c) = 0;
+	virtual BasicLCD& operator<<(const unsigned char * c) = 0;
 	/*=====================================================
 	* Name: lcdMoveCursorUp
 	*
@@ -139,7 +140,7 @@ public:
 	* Name: lcdSetCursorPosition
 	* Entra: Recibe una estructura tipo cursorPosition
 	* Resulta: Posiciona el cursor en la posición dada
-	* por row y column. row[0-1] col[0-19]. Ante un valor inválido
+	* por row y column. row[0-1] col[1-16]. Ante un valor inválido
 	* de row y/o column ignora la instrucción (no hace nada).
 	* Modifica: (cadd).
 	* Devuelve en su nombre “true” si fue satisfactoria “false”
@@ -173,7 +174,7 @@ protected:
 	* Entra: -
 	* Resulta: Posiciona el cursor del display en la posición
 	* dada por (cadd)-1. (cadd) = No se altera
-	*
+	*	
 	* El propósito de la función lcdUpdateCursor() es
 	* informarle al display del valor de cadd cada vez que es
 	* alterado. Esto es necesario pues si llamamos por ejemplo a

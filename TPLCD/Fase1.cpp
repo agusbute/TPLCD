@@ -7,7 +7,7 @@ Fase1::
 Fase1()
 {
 	lcdInit();		//llama a inicializador de lcd y ftdi handler
-	changeFourBitMode(); //inicializa el display en 4 bits
+	changeFourBitMode();	//inicializa el display en 4 bits
 }
 
 Fase1::
@@ -15,6 +15,11 @@ Fase1::
 {
 	FT_Close(disp_handler);
 };
+
+FT_STATUS Fase1::getStatus()
+{
+	return disp_status;
+}
 
 bool Fase1::	
 lcdInit()	// esto genera un handler del display y setea el bitmode del ftdi
@@ -130,28 +135,53 @@ lcdWriteNibble(BYTE nibble)
 	return res;
 }
 
-void Fase1::
+FT_STATUS Fase1::
 changeFourBitMode()
 {
+	FT_STATUS res = FT_IO_ERROR;
 	BYTE function = ((FUNCTION_SET) | (MODE_8BIT));
-	lcdWriteIR(function);
-	Sleep(5);
-	lcdWriteIR(function);
-	Sleep(1);
-	lcdWriteIR(function);
-	Sleep(1);
-	function = (FUNCTION_SET) | (MODE_4BIT);
-	lcdWriteIR(function);
-	Sleep(1);
-	function = ((FUNCTION_SET) | (MODE_4BIT) | (DSP_LINES_TWO) | (FONT_5X8));
-	lcdWriteIR(function);
-	Sleep(1);
-	function = DISPLAY_CONTROL;
-	lcdWriteIR(function);
-	Sleep(1);
-	function = CLEAR_SCREEN;
-	lcdWriteIR(function);
-	Sleep(10);
-	function = ENTRY_MODE_SET;
-	lcdWriteIR(function);
+	if (lcdWriteIR(function))
+	{
+		Sleep(5);
+		if (lcdWriteIR(function))
+		{
+			Sleep(1);
+			if (lcdWriteIR(function))
+			{
+				Sleep(1);
+				function = (FUNCTION_SET) | (MODE_4BIT);
+				if (lcdWriteIR(function))
+				{
+					Sleep(1);
+					function = ((FUNCTION_SET) | (MODE_4BIT) | (DSP_LINES_TWO) | (FONT_5X8));
+					if (lcdWriteIR(function))
+					{
+						Sleep(1);
+						function = DISPLAY_CONTROL;
+						if (lcdWriteIR(function))
+						{
+							Sleep(1);
+							function = CLEAR_SCREEN;
+							if (lcdWriteIR(function))
+							{
+								Sleep(10);
+								function = ENTRY_MODE_SET;
+								if (lcdWriteIR(function))
+								{
+									res = FT_OK;
+								}
+							}
+							
+						}
+						
+					}
+					
+				}
+				
+			}
+			
+		}
+		
+	}
+	return res;
 }
