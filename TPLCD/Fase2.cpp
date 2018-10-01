@@ -90,7 +90,7 @@ Fase2& Fase2::
 operator<<(const unsigned char * c)
 {
 	int len = strlen((const char*)c);	//guardo el largo del string
-	if (len > 32)
+	if (len > MAX_LENGTH)
 	{
 		c =(const unsigned char*) "ERROR - msg too long.";
 	}
@@ -106,9 +106,9 @@ operator<<(const unsigned char * c)
 bool Fase2::
 lcdMoveCursorUp()
 {
-	if (cadd > 16)	//si cadd es < 16 no hace nada porque ya está en la primera linea
+	if (cadd > END_OF_LINE)	//si cadd es < 16 no hace nada porque ya está en la primera linea
 	{
-		cadd -= 16;
+		cadd -= END_OF_LINE;
 		lcdUpdateCursor();
 	}
 	return !getError();
@@ -117,9 +117,9 @@ lcdMoveCursorUp()
 bool Fase2::
 lcdMoveCursorDown()
 {
-	if (cadd <= 16)	//si es cadd > 16 no hace nada porque ya está en la segunda linea
+	if (cadd <= END_OF_LINE)	//si es cadd > 16 no hace nada porque ya está en la segunda linea
 	{
-		cadd += 16;
+		cadd += END_OF_LINE;
 		lcdUpdateCursor();
 	}
 	return !getError();
@@ -128,7 +128,7 @@ lcdMoveCursorDown()
 bool Fase2::
 lcdMoveCursorRight()
 {
-	if (cadd < 32)	//si cadd > 32 no hace nada porque no puede ir más a la derecha
+	if (cadd < MAX_LENGTH)	//si cadd > 32 no hace nada porque no puede ir más a la derecha
 	{
 		cadd++;
 		lcdUpdateCursor();
@@ -151,9 +151,9 @@ bool Fase2::
 lcdSetCursorPosition(const cursorPosition pos)
 {
 	bool ans;
-	if(pos.row <= 1 && pos.row >=0 && pos.column >=0 && pos.column <=16)	//verifico que row y column tomen parámetros válidos
+	if(pos.row <= 1 && pos.row >=0 && pos.column >=0 && pos.column <= END_OF_LINE)	//verifico que row y column tomen parámetros válidos
 	{
-		cadd = pos.row * 16 + pos.column;
+		cadd = pos.row * END_OF_LINE + pos.column;
 		ans = true;
 	}
 	else
@@ -167,10 +167,10 @@ cursorPosition Fase2::
 lcdGetCursorPosition()
 {
 	cursorPosition pos;
-		if (cadd / 2 > 16)	//veo si el cursor está en la segunda linea
+		if (cadd / 2 > END_OF_LINE)	//veo si el cursor está en la segunda linea
 		{
 			pos.row = 1;	//segunda linea
-			pos.column = cadd - 17;	//setteo la posición
+			pos.column = cadd - (END_OF_LINE+1);	//setteo la posición
 		}
 		else
 		{
@@ -184,12 +184,12 @@ void Fase2::
 lcdUpdateCursor()
 {
 	cursorPosition pos, pos1=lcdGetCursorPosition();
-	if (cadd > 16)
+	if (cadd > END_OF_LINE)
 	{
 		pos.row = 1;	//segunda linea
 		pos.column = cadd - 17;	//setteo posición
 	}
-	else if (cadd <= 16)
+	else if (cadd <= END_OF_LINE)
 	{
 		pos.row = 0;
 		pos.column = cadd - 1;

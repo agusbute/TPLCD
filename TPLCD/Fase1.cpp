@@ -138,67 +138,34 @@ lcdWriteNibble(BYTE nibble)
 
 FT_STATUS Fase1::
 changeFourBitMode()
-/*{
+{
 	FT_STATUS res = FT_IO_ERROR;
-	BYTE function = ((FUNCTION_SET) | (MODE_8BIT));
-	if (lcdWriteIR(function))
+	if (!lcdWriteNibble(MSN(FUNCTION_SET) | MODE_8BIT))
 	{
-		Sleep(5);
-		if (lcdWriteIR(function))
+		Sleep(4);
+		if (!lcdWriteNibble(MSN(FUNCTION_SET) | MODE_8BIT))
 		{
 			Sleep(1);
-			if (lcdWriteIR(function))
+			if (!lcdWriteNibble(MSN(FUNCTION_SET) | MODE_8BIT))
 			{
-				Sleep(1);
-				function = (FUNCTION_SET) | (MODE_4BIT);
-				if (lcdWriteIR(function))
+				if (!lcdWriteNibble(MSN(FUNCTION_SET) | MODE_4BIT))
 				{
-					Sleep(1);
-					function = ((FUNCTION_SET) | (MODE_4BIT) | (DSP_LINES_TWO) | (FONT_5X8));
-					if (lcdWriteIR(function))
+					if (lcdWriteIR(FUNCTION_SET | MODE_4BIT | DSP_LINES_TWO | FONT_5X8))
 					{
-						Sleep(1);
-						function = DISPLAY_CONTROL;
-						if (lcdWriteIR(function))
+						if (lcdWriteIR(DISPLAY_ON_OFF_CONTROL))
 						{
-							Sleep(1);
-							function = CLEAR_SCREEN;
-							if (lcdWriteIR(function))
+							if (lcdWriteIR(CLEAR_SCREEN))
 							{
-								Sleep(10);
-								function = ENTRY_MODE_SET;
-								if (lcdWriteIR(function))
+								if(lcdWriteIR(ENTRY_MODE_SET))
 								{
 									res = FT_OK;
 								}
 							}
-
 						}
-
 					}
-
 				}
-
 			}
-
 		}
-
 	}
 	return res;
-}*/
-{
-	bool progr_status = true; //FT_Ok es ==0 entonces si se suma deberia quedarse igual
-
-	progr_status &= lcdWriteNibble(MSN(FUNCTION_SET) | MODE_8BIT); //Envia el nibble alto de ?function set? con el modo en 8 bits. 
-	Sleep(4); //Sleep de 4ms 
-	progr_status &= lcdWriteNibble(MSN(FUNCTION_SET) | MODE_8BIT); //Envia el nibble alto de ?function set? con el modo en 8 bits. 
-	Sleep(1);//Sleep de 1ms (deberia ser 0,1ms pero no genera diferencia)
-	progr_status &= lcdWriteNibble(MSN(FUNCTION_SET) | MODE_8BIT); //Envia el nibble alto de ?function set? con el modo en 8 bits. 
-	progr_status &= lcdWriteNibble(MSN(FUNCTION_SET) | MODE_4BIT); //Envia el nibble alto de ?function set? con el modo en 8 bits. 
-	progr_status &= lcdWriteIR(FUNCTION_SET | MODE_4BIT | DSP_LINES_TWO | FONT_5X8); //Envia la instruccion ?function set? con el modo en 4 bits.
-	progr_status &= lcdWriteIR(DISPLAY_ON_OFF_CONTROL); //Envia la instrucci?n  ?display on/off control? con el modo en 4 bits.
-	progr_status &= lcdWriteIR(CLEAR_SCREEN); //Envia la instrucci?n  ?clear screen? con el modo en 4 bits.
-	progr_status &= lcdWriteIR(ENTRY_MODE_SET); //Envia la instrucci?n  ?mode set entry? con el modo en 4 bits.
-
-	return progr_status;
 }

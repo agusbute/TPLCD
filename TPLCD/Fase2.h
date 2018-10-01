@@ -3,6 +3,9 @@
 #include "Fase1.h"
 #include "BasicLCD.h"
 
+#define MAX_LENGTH 32
+#define END_OF_LINE 16
+
 
 class Fase2 : public BasicLCD
 {
