@@ -116,7 +116,7 @@ lcdWriteNibble(BYTE nibble)
 {
 	bytesSent = 0;
 	bool res = false;
-	unsigned char temp = nibble & 0xFE; // 11111110
+	unsigned char temp = nibble & (~LCD_E); // 11111110
 	if (FT_Write(disp_handler, &temp, 1, &bytesSent) != FT_OK)
 	{
 		cout << "error en write nibble" << endl;
@@ -126,7 +126,7 @@ lcdWriteNibble(BYTE nibble)
 	temp = nibble | LCD_E; // 00000001
 	FT_Write(disp_handler, &temp, 1, &bytesSent);
 	Sleep(3);
-	temp = nibble & 0xFE; // 11111110
+	temp = nibble & (~LCD_E); // 11111110
 	if (FT_Write(disp_handler, &temp, 1, &bytesSent) != FT_OK)
 	{
 		cout << "error en write nibble" << endl;

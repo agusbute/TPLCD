@@ -54,28 +54,23 @@ lcdClearToEOL()
 
 	if (pos.row == 0)	//si está en la prime
 	{
-		while(cadd <= 16)
+		while(cadd <= END_OF_LINE)
 		{
-			if (fase1->lcdWriteDR(' '))
-			{
-				res = true;
-			}
+			res = fase1->lcdWriteDR(' ');
 			res1 = lcdMoveCursorRight();
 		}
 	}
 	else
 	{
-		while(cadd <= 16)
+		while(cadd <= MAX_LENGTH)
 		{
-			if (!(fase1->lcdWriteDR(' ')))
-			{
-				res = false;	
-			}
+			res = fase1->lcdWriteDR(' ');
 			res1 = lcdMoveCursorRight();
 		}
 	}
 	cadd = buff;
-	return (res1 || res);
+	lcdUpdateCursor();
+	return (res1 && res);
 }
 
 Fase2& Fase2:: 
@@ -92,7 +87,7 @@ operator<<(const unsigned char * c)
 	int len = strlen((const char*)c);	//guardo el largo del string
 	if (len > MAX_LENGTH)
 	{
-		c =(const unsigned char*) "ERROR - msg too long.";
+		c = (const unsigned char*) "ERROR - msg too long.";
 	}
 	len = strlen((const char*)c);
 	for(int i = 0; i < len; i++)	//voy escribiendo de a caracter
@@ -128,7 +123,7 @@ lcdMoveCursorDown()
 bool Fase2::
 lcdMoveCursorRight()
 {
-	if (cadd < MAX_LENGTH)	//si cadd > 32 no hace nada porque no puede ir más a la derecha
+	if (cadd <= MAX_LENGTH)	//si cadd > 32 no hace nada porque no puede ir más a la derecha
 	{
 		cadd++;
 		lcdUpdateCursor();
