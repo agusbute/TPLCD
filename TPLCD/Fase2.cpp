@@ -90,6 +90,11 @@ Fase2& Fase2::
 operator<<(const unsigned char * c)
 {
 	int len = strlen((const char*)c);	//guardo el largo del string
+	if (len > 32)
+	{
+		c =(const unsigned char*) "ERROR - msg too long.";
+	}
+	len = strlen((const char*)c);
 	for(int i = 0; i < len; i++)	//voy escribiendo de a caracter
 	{
 		fase1->lcdWriteDR(c[i]);
@@ -178,16 +183,16 @@ lcdGetCursorPosition()
 void Fase2::
 lcdUpdateCursor()
 {
-	cursorPosition pos;
-	if (cadd / 2 > 16)	//veo si el cursor está en la segunda linea
+	cursorPosition pos, pos1=lcdGetCursorPosition();
+	if (cadd > 16)
 	{
 		pos.row = 1;	//segunda linea
 		pos.column = cadd - 17;	//setteo posición
 	}
-	else
+	else if (cadd <= 16)
 	{
-		pos.row = 0;	//primera linea 
-		pos.column = cadd - 1;	//setteo posición
+		pos.row = 0;
+		pos.column = cadd - 1;
 	}
 	if (!(fase1->lcdWriteIR(SET_ADDRESS(pos.column, pos.row)))) //ponemos el cursor en la posicion del DDRAM que viene dada por el cadd
 	{
