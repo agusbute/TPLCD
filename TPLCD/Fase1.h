@@ -27,6 +27,6 @@ class Fase1
 		
 	private:
 		FT_HANDLE disp_handler;
-		LPDWORD bytesSent;
+		DWORD bytesSent;
 		FT_STATUS disp_status;
 };

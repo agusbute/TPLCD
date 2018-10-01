@@ -8,6 +8,7 @@ Fase2::Fase2()
 	fase1 = new Fase1;
 	cadd = 1;
 	error = false;
+	lcdUpdateCursor();
 }
 
 Fase2::~Fase2()
@@ -40,6 +41,7 @@ lcdClear()
 	res = !(fase1->lcdWriteIR(CLEAR_SCREEN)); 
 	Sleep(10);
 	cadd = 1;
+	lcdUpdateCursor();
 	return res;
 }
 
@@ -76,7 +78,8 @@ lcdClearToEOL()
 	return (res1 || res);
 }
 
-Fase2& Fase2:: operator<<(const unsigned char c)
+Fase2& Fase2:: 
+operator<<(const unsigned char c)
 {
 	fase1->lcdWriteDR(c);	//escribo el caracter						
 	lcdMoveCursorRight();	//muevo el cursor a la siguiente posición

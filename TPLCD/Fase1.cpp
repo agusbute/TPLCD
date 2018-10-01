@@ -47,11 +47,11 @@ lcdWriteIR(BYTE byte)
 {
 	unsigned char temp = MSN(byte); //temp tiene el MSN
 	temp = temp | LCD_RS_OFF; //0000 0010	
-	if (lcdWriteNibble(temp))
+	if (!lcdWriteNibble(temp))
 	{
 		temp = LSN(byte);
 		temp = temp | LCD_RS_OFF; //
-		if (lcdWriteNibble(temp))
+		if (!lcdWriteNibble(temp))
 		{
 			return true;
 		}
@@ -69,13 +69,13 @@ lcdWriteIR(BYTE byte)
 bool Fase1::
 lcdWriteDR(BYTE byte)		
 {
-	BYTE temp = MSN(byte); //temp tiene el MSN
+	BYTE temp = MSN(byte);	//temp tiene el MSN
 	temp = temp | LCD_RS_ON; //0000 0010	
-	if (lcdWriteNibble(temp))
+	if (!lcdWriteNibble(temp))
 	{
 		temp = LSN(byte);
 		temp = temp | LCD_RS_ON; //
-		if (lcdWriteNibble(temp))
+		if (!lcdWriteNibble(temp))
 		{
 			return true;
 		}
@@ -114,19 +114,20 @@ lcdWriteByte(BYTE value, BYTE rs)
 bool Fase1::
 lcdWriteNibble(BYTE nibble)
 {
+	bytesSent = 0;
 	bool res = false;
 	unsigned char temp = nibble & 0xFE; // 11111110
-	if (FT_Write(disp_handler, &temp, 1, bytesSent) == FT_OK)		//guarda esto puede tirar error en todos lados
+	if (FT_Write(disp_handler, &temp, 1, &bytesSent) != FT_OK)
 	{
 		cout << "error en write nibble" << endl;
 		res = true;
 	}
 	Sleep(1);
 	temp = nibble | LCD_E; // 00000001
-	FT_Write(disp_handler, &temp, 1, bytesSent);
+	FT_Write(disp_handler, &temp, 1, &bytesSent);
 	Sleep(3);
 	temp = nibble & 0xFE; // 11111110
-	if (FT_Write(disp_handler, &temp, 1, bytesSent) == FT_OK)
+	if (FT_Write(disp_handler, &temp, 1, &bytesSent) != FT_OK)
 	{
 		cout << "error en write nibble" << endl;
 		res = true;
@@ -137,7 +138,7 @@ lcdWriteNibble(BYTE nibble)
 
 FT_STATUS Fase1::
 changeFourBitMode()
-{
+/*{
 	FT_STATUS res = FT_IO_ERROR;
 	BYTE function = ((FUNCTION_SET) | (MODE_8BIT));
 	if (lcdWriteIR(function))
@@ -171,17 +172,33 @@ changeFourBitMode()
 									res = FT_OK;
 								}
 							}
-							
+
 						}
-						
+
 					}
-					
+
 				}
-				
+
 			}
-			
+
 		}
-		
+
 	}
 	return res;
+}*/
+{
+	bool progr_status = true; //FT_Ok es ==0 entonces si se suma deberia quedarse igual
+
+	progr_status &= lcdWriteNibble(MSN(FUNCTION_SET) | MODE_8BIT); //Envia el nibble alto de ?function set? con el modo en 8 bits. 
+	Sleep(4); //Sleep de 4ms 
+	progr_status &= lcdWriteNibble(MSN(FUNCTION_SET) | MODE_8BIT); //Envia el nibble alto de ?function set? con el modo en 8 bits. 
+	Sleep(1);//Sleep de 1ms (deberia ser 0,1ms pero no genera diferencia)
+	progr_status &= lcdWriteNibble(MSN(FUNCTION_SET) | MODE_8BIT); //Envia el nibble alto de ?function set? con el modo en 8 bits. 
+	progr_status &= lcdWriteNibble(MSN(FUNCTION_SET) | MODE_4BIT); //Envia el nibble alto de ?function set? con el modo en 8 bits. 
+	progr_status &= lcdWriteIR(FUNCTION_SET | MODE_4BIT | DSP_LINES_TWO | FONT_5X8); //Envia la instruccion ?function set? con el modo en 4 bits.
+	progr_status &= lcdWriteIR(DISPLAY_ON_OFF_CONTROL); //Envia la instrucci?n  ?display on/off control? con el modo en 4 bits.
+	progr_status &= lcdWriteIR(CLEAR_SCREEN); //Envia la instrucci?n  ?clear screen? con el modo en 4 bits.
+	progr_status &= lcdWriteIR(ENTRY_MODE_SET); //Envia la instrucci?n  ?mode set entry? con el modo en 4 bits.
+
+	return progr_status;
 }
