@@ -13,6 +13,7 @@ Fase2::Fase2()
 
 Fase2::~Fase2()
 {
+	lcdClear();
 	delete fase1;
 }
 
