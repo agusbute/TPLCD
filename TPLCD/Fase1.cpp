@@ -142,20 +142,25 @@ changeFourBitMode()
 	FT_STATUS res = FT_IO_ERROR;
 	if (!lcdWriteNibble(MSN(FUNCTION_SET) | MODE_8BIT))
 	{
-		Sleep(4);
+		Sleep(5);
 		if (!lcdWriteNibble(MSN(FUNCTION_SET) | MODE_8BIT))
 		{
 			Sleep(1);
 			if (!lcdWriteNibble(MSN(FUNCTION_SET) | MODE_8BIT))
 			{
+				Sleep(1);
 				if (!lcdWriteNibble(MSN(FUNCTION_SET) | MODE_4BIT))
 				{
+					Sleep(1);
 					if (lcdWriteIR(FUNCTION_SET | MODE_4BIT | DSP_LINES_TWO | FONT_5X8))
 					{
+						Sleep(1);
 						if (lcdWriteIR(DISPLAY_ON_OFF_CONTROL))
 						{
+							Sleep(1);
 							if (lcdWriteIR(CLEAR_SCREEN))
 							{
+								Sleep(10);
 								if(lcdWriteIR(ENTRY_MODE_SET))
 								{
 									res = FT_OK;
@@ -168,4 +173,5 @@ changeFourBitMode()
 		}
 	}
 	return res;
+
 }

@@ -53,7 +53,7 @@ lcdClearToEOL()
 	int buff = cadd;	
 	bool res = true, res1=true;
 
-	if (pos.row == 0)	//si está en la prime
+	if (pos.row == 0)	//si está en la primera
 	{
 		while(cadd <= END_OF_LINE)
 		{
